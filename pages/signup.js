@@ -25,6 +25,7 @@ import Loader from "../assets/Loader";
 
 const signup = () => {
   const pfpPickerRef = useRef(null);
+  const imagePickerRef = useRef(null);
 
   const router = useRouter();
   const { join } = router.query;
@@ -38,6 +39,8 @@ const signup = () => {
   const [wallet, setWallet] = useState(null);
   const [pfp, setPfp] = useState(null);
   const [pfpLoading, setPfpLoading] = useState(false);
+  const [image, setImage] = useState(null);
+  const [imageLoading, setImageLoading] = useState(false);
   const [cover, setCover] = useState(null);
   const [coverLoading, setCoverLoading] = useState(false);
 
@@ -149,6 +152,23 @@ const signup = () => {
       );
     };
   };
+  const addImage = (e) => {
+    setImageLoading(true);
+    const reader = new FileReader();
+    if (e.target.files[0]) {
+      reader.readAsDataURL(e.target.files[0]);
+    }
+    reader.onload = async (readerEvent) => {
+      const imageRef = ref(storage, `${user.uid}/image`);
+      await uploadString(imageRef, readerEvent.target.result, "data_url").then(
+        async () => {
+          const downloadURL = await getDownloadURL(imageRef);
+          setImage(downloadURL);
+          setImageLoading(false);
+        }
+      );
+    };
+  };
   const addCover = (e) => {
     setCoverLoading(true);
     const reader = new FileReader();
@@ -180,6 +200,9 @@ const signup = () => {
       pfp:
         pfp ||
         "https://firebasestorage.googleapis.com/v0/b/discovr-98d5c.appspot.com/o/images%2Fdefault.jpg?alt=media&token=309521b5-1798-44a2-907d-46d499e41a5d",
+      image:
+        image ||
+        "https://firebasestorage.googleapis.com/v0/b/discovr-98d5c.appspot.com/o/images%2Fdefault.jpg?alt=media&token=309521b5-1798-44a2-907d-46d499e41a5d",
       cover:
         cover ||
         "https://firebasestorage.googleapis.com/v0/b/neptune-94d06.appspot.com/o/defaults%2Fgalaxy.jpeg?alt=media&token=1880ade4-49a9-4e29-aa45-1a8fe5d4b411",
@@ -191,9 +214,11 @@ const signup = () => {
       });
       if (!result?.error) {
         setLoading(false);
-        await refreshUserInfo();
-        console.log("User", user);
-        router.push(`/u/${user.username}`);
+        const newInfo = await refreshUserInfo();
+        // console.log("NEw", newInfo);
+        // console.log("User", user);
+        // setTimeout(() => console.log("user Wait", user), 100);
+        router.push(`/u/${newInfo.username}`);
       } else {
         console.log("An error occured", result.error);
       }
@@ -316,7 +341,7 @@ const signup = () => {
         <div className="flex flex-col space-y-4">
           <div>
             <label className="block text-black font-medium mb-2">
-              Profile photo
+              NFT Profile photo
             </label>
             <div className="mt-1 flex items-center">
               <span className="center h-[60px] w-[60px] rounded-full overflow-hidden bg-neutral-200 text-[1.5em]">
@@ -350,6 +375,45 @@ const signup = () => {
                 hidden
                 onChange={addPfp}
                 ref={pfpPickerRef}
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-black font-medium mb-2">
+              IRL Profile photo
+            </label>
+            <div className="mt-1 flex items-center">
+              <span className="center h-[60px] w-[60px] rounded-full overflow-hidden bg-neutral-200 text-[1.5em]">
+                {imageLoading ? (
+                  <Loader size={25} />
+                ) : image ? (
+                  <Image src={image} width={60} height={60} objectFit="cover" />
+                ) : (
+                  <RiUserAddLine />
+                )}
+              </span>
+              {false ? (
+                <button
+                  type="button"
+                  className="ml-5 bg-white hover:bg-zinc-700 py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-zind-700 hover:text-white focus:outline-none transition-colors"
+                >
+                  Choose NFT
+                </button>
+              ) : null}
+
+              <button
+                type="button"
+                className="ml-5 bg-white hover:bg-zinc-700 py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-zind-700 hover:text-white focus:outline-none transition-colors"
+                onClick={() => imagePickerRef.current.click()}
+              >
+                Upload Image
+              </button>
+              <input
+                type="file"
+                accept="image/png, image/jpeg"
+                hidden
+                onChange={addImage}
+                ref={imagePickerRef}
               />
             </div>
           </div>

@@ -15,7 +15,6 @@ const noAuthRequired = [
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
-  console.log("APP, ", router);
 
   return (
     <AuthContextProvider>

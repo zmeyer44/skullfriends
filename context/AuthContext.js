@@ -55,10 +55,11 @@ export const AuthContextProvider = ({ children }) => {
 
   const refreshUserInfo = async () => {
     if (user) {
-      await getUserInfo(user.uid).then((e) => {
+      return await getUserInfo(user.uid).then((e) => {
         const profileData = e.data();
         setUser({ ...user, ...profileData });
         checkEns(profileData?.wallets);
+        return { ...user, ...profileData };
       });
     }
   };
@@ -76,6 +77,8 @@ export const AuthContextProvider = ({ children }) => {
           uid,
           email,
           pfp: "https://firebasestorage.googleapis.com/v0/b/discovr-98d5c.appspot.com/o/images%2Fdefault.jpg?alt=media&token=309521b5-1798-44a2-907d-46d499e41a5d",
+          image:
+            "https://firebasestorage.googleapis.com/v0/b/discovr-98d5c.appspot.com/o/images%2Fdefault.jpg?alt=media&token=309521b5-1798-44a2-907d-46d499e41a5d",
           nonce: Math.floor(Math.random() * 1000000).toString(),
           createdAt: Date.now(),
         };
