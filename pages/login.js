@@ -62,7 +62,7 @@ const login = () => {
         elements={formElements}
         options={[
           { label: "Return Home", href: "/" },
-          { label: "Forgot Password", href: "/forgotpassword" },
+          { label: "Sign up", href: "/signup" },
         ]}
       >
         <div className="mt-3">

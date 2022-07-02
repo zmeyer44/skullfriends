@@ -8,13 +8,14 @@ const noAuthRequired = [
   "/login",
   "/signup",
   "/request",
-  "/u/[username]",
+  "/u/*",
   "/",
-  "",
+  "/u/[username]",
 ];
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
+  console.log("APP, ", router);
 
   return (
     <AuthContextProvider>
