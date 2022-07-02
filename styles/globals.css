@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(180deg);
+  }
+}
+
+@layer components {
+  .center {
+    @apply flex items-center justify-center;
+  }
+  .hover-effect {
+    @apply hover:text-blue-600 hover:bg-blue-50 hover:dark:text-slate-300 hover:dark:bg-slate-700 transition duration-300 ease-in-out cursor-pointer;
+  }
+}
+
+.emoji-mart-preview {
+  display: none !important;
+}
+
+button.menu {
+  position: relative;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+  border-width: 0 !important;
+  margin-right: 1.5rem;
+  background: none;
+  width: 1.5rem;
+  height: 2rem;
+  border-color: rgba(0, 0, 0, 0);
+  appearance: none;
+  outline: none;
+}
+button.menu div {
+  position: relative;
+  width: 1.5rem;
+  height: 12px;
+  transition: 0.085s all ease-in;
+  cursor: pointer;
+  display: flex;
+}
+button.menu div span {
+  position: absolute;
+  height: 2px;
+  width: 1.5rem;
+  -webkit-transform-origin: left;
+  -ms-transform-origin: left;
+  transform-origin: left;
+  display: block;
+  transition: 0.085s all ease-in;
+  border-radius: 100px;
+  background-color: #212121;
+}
+button.menu div span.top {
+  top: 0;
+}
+button.menu div span.bottom {
+  bottom: 0;
+}
+button.menu :hover span.top {
+  width: 1rem;
+}
+button.menu.true div {
+  width: 18px;
+  height: 19px;
+}
+button.menu.true span.top {
+  transform-origin: left center;
+  width: 1.5rem;
+  transform: rotate(45deg);
+}
+button.menu.true span.bottom {
+  transform-origin: left center;
+  transform: rotate(-45deg);
+}
