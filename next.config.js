@@ -6,6 +6,8 @@ module.exports = {
       "pbs.twimg.com",
       "cdn.discordapp.com",
       "openseauserdata.com",
+      "img.evbuc.com",
+      "s3-eu-west-1.amazonaws.com",
     ],
   },
 };

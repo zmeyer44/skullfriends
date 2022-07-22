@@ -14,7 +14,7 @@ const Avatar = ({
   borderWidth = 3,
   styles,
 }) => {
-  const [color, setColor] = useState("white");
+  const [color, setColor] = useState("blue");
   const [label, setLabel] = useState("");
   const [username, setUsername] = useState("");
 

@@ -5,6 +5,7 @@ import { useAuth } from "../../context/AuthContext";
 import Avatar from "../../components/Avatar";
 import PillButton from "../../components/PillButton";
 import CommunityCard from "../../components/CommunityCard";
+import Verified from "../../assets/Verified";
 import ItemCard from "../../components/ItemCard";
 import CollectionCard from "../../components/CollectionCard";
 import {
@@ -20,6 +21,21 @@ import { fetchAssets, fetchCollections, cleanUrl } from "../../utils";
 import icons from "../../assets/icons";
 import Loader from "../../assets/Loader";
 
+const emailList = [
+  "stratowerx@gmail.com",
+  "irishnftgal@gmail.com",
+  "frank.poncelet@gmail.com",
+  "renepupala@outlook.com",
+  "elliot@notanothernft.io",
+  "emeralds.diamonds@gmail.com",
+  "theboardroom@me.com",
+  "hello@psyborg.gallery",
+  "jon.hgilman@gmail.com",
+  "connorwells111@gmail.com",
+  "davidtoko60@gmail.com",
+  "ragoigong@gmail.com",
+  "zmmeyer44@gmail.com",
+];
 export default function ProfilePage() {
   const router = useRouter();
   const { user } = useAuth();
@@ -32,7 +48,7 @@ export default function ProfilePage() {
   const [tab, setTab] = useState("Collections");
   const [avatarSize, setAvatarSize] = useState(110);
   const [loading, setLoading] = useState(true);
-  const [editProfileModalOpen, setEditProfileModalOpen] = useState(true);
+  const [editProfileModalOpen, setEditProfileModalOpen] = useState(false);
 
   const handleConnect = async () => {
     if (!user) {
@@ -88,11 +104,7 @@ export default function ProfilePage() {
     if (username) {
       init();
     }
-  }, [username]);
-
-  useEffect(() => {
-    console.log("USer Data", userData);
-  }, [userData]);
+  }, [username, editProfileModalOpen]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -217,13 +229,56 @@ export default function ProfilePage() {
   }
 
   function renderEvents() {
-    if (!assets || assets?.length === 0) {
+    if (emailList.includes(userData?.email)) {
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-3 gap-x-3 xl:gap-y-5 xl:gap-x-5 px-2 py-4 md:py-8 lg:py-10">
+          <a
+            href={`https://www.eventbrite.co.uk/e/nftuk-july-22-tickets-373549595897?keep_tld=1`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <div className="flex flex-col bg-slate-800 border border-slate-500 rounded-lg overflow-hidden relative w-full max-w-[375px]">
+              <div className="relative h-[80px]">
+                <Image
+                  src="https://s3-eu-west-1.amazonaws.com/onin.london/assets/unnamed6-1024x682.jpg"
+                  layout="fill"
+                  objectFit="cover"
+                />
+              </div>
+              <div className="flex justify-center relative h-[130px] px-4 py-3">
+                <div className="absolute top-[-40px] ">
+                  <Avatar
+                    src="https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F310504999%2F236244935012%2F1%2Foriginal.20220629-100543?w=800&auto=format%2Ccompress&q=75&sharp=10&rect=0%2C246%2C2160%2C1080&s=2cf7174fac658bddec7731346d0fd81f"
+                    size={70}
+                  />
+                </div>
+                <div className="flex flex-col pt-[30px] text-center space-y-1">
+                  <div className="center">
+                    <h3 className="font-semibold text-slate-100 text-center mr-1">
+                      NFT UK - JUJU's Bar
+                    </h3>
+                    <Verified />
+                  </div>
+                  <h3 className="text-[.7em] leading-4 text-slate-300 max-h-[100px] max-w-[300px] line-clamp-3">
+                    NFTUK has grown exponentially and as part of our monthly
+                    commitment to the community, We are gathering again on July
+                    22. Bring your best vibes, your stickers and your awesome
+                    swag we are taking the NFTs Culture lingo on another level.
+                  </h3>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      );
+    } else {
       return (
         <div className="center h-[200px] text-slate-300">
           <h3>No Events Found</h3>
         </div>
       );
     }
+
     return (
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 md:gap-4 lg:grid-cols-5 gap-2 px-2 py-4 md:py-8 lg:py-10">
         {assets?.map((item, index) => (
