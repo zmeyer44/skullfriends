@@ -1,5 +1,5 @@
 const FormInput = (
-  { value, setValue, error, label, type, onFocus, noDark },
+  { value, setValue, error, label, type, onFocus, noDark, placeholder },
   props
 ) => {
   return (
@@ -23,6 +23,7 @@ const FormInput = (
         name={label}
         type={type}
         onFocus={onFocus}
+        placeholder={placeholder}
         {...props}
       />
       <span className="text-red-500 text-sm mb-2">{error}</span>

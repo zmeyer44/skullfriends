@@ -159,16 +159,20 @@ export const PostModal = ({ open, onClose, titleOption }) => {
 };
 export const EditProfileModal = ({ open, onClose }) => {
   const pfpPickerRef = useRef(null);
-  const coverPickerRef = useRef(null);
+  const imagePickerRef = useRef(null);
   const { user, refreshUserInfo } = useAuth();
 
   const [username, setUsername] = useState(user?.displayName || "");
+  const [twitter, setTwitter] = useState(user?.twitter || "");
+  const [opensea, setOpensea] = useState(user?.opensea || "");
   const [pfp, setPfp] = useState(user?.pfp);
   const [pfpLoading, setPfpLoading] = useState(false);
-  const [cover, setCover] = useState(user?.cover);
-  const [coverLoading, setCoverLoading] = useState(false);
+  const [image, setImage] = useState(user?.image);
+  const [imageLoading, setImageLoading] = useState(false);
 
   const [usernameError, setUsernameError] = useState("");
+  const [twitterError, setTwitterError] = useState("");
+  const [openseaError, setOpenseaError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleUpdateUsername = async () => {
@@ -192,6 +196,28 @@ export const EditProfileModal = ({ open, onClose }) => {
       console.log("ERROR", err);
     }
   };
+  const handleUpdateTwitter = async () => {
+    try {
+      if (!twitter.includes("https://twitter.com/")) {
+        setTwitterError("Must be a valid twitter url");
+        return false;
+      }
+      return true;
+    } catch (err) {
+      console.log("ERROR", err);
+    }
+  };
+  const handleUpdateOpensea = async () => {
+    try {
+      if (!opensea.includes("https://opensea.io/")) {
+        setOpenseaError("Must be a valid opensea url");
+        return false;
+      }
+      return true;
+    } catch (err) {
+      console.log("ERROR", err);
+    }
+  };
   const addPfp = (e) => {
     setPfpLoading(true);
     const reader = new FileReader();
@@ -209,19 +235,19 @@ export const EditProfileModal = ({ open, onClose }) => {
       );
     };
   };
-  const addCover = (e) => {
-    setCoverLoading(true);
+  const addImage = (e) => {
+    setImageLoading(true);
     const reader = new FileReader();
     if (e.target.files[0]) {
       reader.readAsDataURL(e.target.files[0]);
     }
     reader.onload = async (readerEvent) => {
-      const imageRef = ref(storage, `${user.uid}/cover`);
+      const imageRef = ref(storage, `${user.uid}/image`);
       await uploadString(imageRef, readerEvent.target.result, "data_url").then(
         async () => {
           const downloadURL = await getDownloadURL(imageRef);
-          setCover(downloadURL);
-          setCoverLoading(false);
+          setImage(downloadURL);
+          setImageLoading(false);
         }
       );
     };
@@ -232,8 +258,20 @@ export const EditProfileModal = ({ open, onClose }) => {
     if (user.pfp !== pfp) {
       updatedData.pfp = pfp;
     }
-    if (user.cover !== cover) {
-      updatedData.cover = cover;
+    if (user.image !== image) {
+      updatedData.image = image;
+    }
+    if (user?.twitter !== twitter) {
+      const validTwitter = await handleUpdateTwitter();
+      if (validTwitter) {
+        updatedData.twitter = twitter;
+      }
+    }
+    if (user?.opensea !== opensea) {
+      const validOpensea = await handleUpdateOpensea();
+      if (validOpensea) {
+        updatedData.opensea = opensea;
+      }
     }
     if (user.displayName !== username) {
       const validUsername = await handleUpdateUsername();
@@ -275,91 +313,136 @@ export const EditProfileModal = ({ open, onClose }) => {
         <h2 className="text-[1.5em] text-black dark:text-slate-200 font-medium mb-4">
           Edit Profile
         </h2>
-        <div className="flex flex-col space-y-4">
-          <div className="flex flex-col md:flex-row w-full space-y-4 md:space-y-0">
-            <div className="flex flex-col w-full">
-              <label className="block text-black dark:text-slate-200 font-medium mb-2">
-                Profile photo
-              </label>
-              <div className="mt-1 flex items-center">
-                <span className="center h-[60px] w-[60px] rounded-full overflow-hidden bg-neutral-200 dark:bg-slate-700 text-[1.5em]">
-                  {pfpLoading ? (
-                    <Loader size={25} />
-                  ) : pfp ? (
-                    <Image src={pfp} width={60} height={60} objectFit="cover" />
-                  ) : (
-                    <RiUserAddLine />
-                  )}
-                </span>
-                {false ? (
+        <div className="flex flex-col ">
+          <div className="flex flex-col space-y-4">
+            <div className="flex flex-col md:flex-row w-full space-y-4 md:space-y-0">
+              <div className="flex flex-col w-full">
+                <label className="block text-black dark:text-slate-200 font-medium mb-2">
+                  Pfp photo
+                </label>
+                <div className="mt-1 flex items-center">
+                  <span className="center h-[60px] w-[60px] rounded-full overflow-hidden bg-neutral-200 dark:bg-slate-700 text-[1.5em]">
+                    {pfpLoading ? (
+                      <Loader size={25} />
+                    ) : pfp ? (
+                      <Image
+                        src={pfp}
+                        width={60}
+                        height={60}
+                        objectFit="cover"
+                      />
+                    ) : (
+                      <RiUserAddLine />
+                    )}
+                  </span>
+                  {false ? (
+                    <button
+                      type="button"
+                      className="ml-5 bg-white dark:bg-slate-700  hover:bg-zinc-700 py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-zind-700 hover:text-white focus:outline-none transition-colors"
+                    >
+                      Choose NFT
+                    </button>
+                  ) : null}
+
                   <button
                     type="button"
-                    className="ml-5 bg-white dark:bg-slate-700  hover:bg-zinc-700 py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-zind-700 hover:text-white focus:outline-none transition-colors"
+                    className="ml-5 bg-white dark:bg-slate-700 hover:bg-zinc-700 py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-zind-700 hover:text-white focus:outline-none transition-colors"
+                    onClick={() => pfpPickerRef.current.click()}
                   >
-                    Choose NFT
+                    Upload Image
                   </button>
-                ) : null}
+                  <input
+                    type="file"
+                    accept="image/png, image/jpeg"
+                    hidden
+                    onChange={addPfp}
+                    ref={pfpPickerRef}
+                  />
+                </div>
+              </div>
+              <div className="flex flex-col w-full">
+                <label className="block text-black dark:text-slate-200 font-medium mb-2">
+                  IRL Profile photo
+                </label>
+                <div className="mt-1 flex items-center">
+                  <span className="center h-[60px] w-[60px] rounded-full overflow-hidden bg-neutral-200 dark:bg-slate-700 text-[1.5em]">
+                    {imageLoading ? (
+                      <Loader size={25} />
+                    ) : image ? (
+                      <Image
+                        src={image}
+                        width={60}
+                        height={60}
+                        objectFit="cover"
+                      />
+                    ) : (
+                      <RiUserAddLine />
+                    )}
+                  </span>
+                  {false ? (
+                    <button
+                      type="button"
+                      className="ml-5 bg-white dark:bg-slate-700  hover:bg-zinc-700 py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-zind-700 hover:text-white focus:outline-none transition-colors"
+                    >
+                      Choose NFT
+                    </button>
+                  ) : null}
 
-                <button
-                  type="button"
-                  className="ml-5 bg-white dark:bg-slate-700 hover:bg-zinc-700 py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-zind-700 hover:text-white focus:outline-none transition-colors"
-                  onClick={() => pfpPickerRef.current.click()}
-                >
-                  Upload Image
-                </button>
-                <input
-                  type="file"
-                  accept="image/png, image/jpeg"
-                  hidden
-                  onChange={addPfp}
-                  ref={pfpPickerRef}
+                  <button
+                    type="button"
+                    className="ml-5 bg-white dark:bg-slate-700 hover:bg-zinc-700 py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-zind-700 hover:text-white focus:outline-none transition-colors"
+                    onClick={() => imagePickerRef.current.click()}
+                  >
+                    Upload Image
+                  </button>
+                  <input
+                    type="file"
+                    accept="image/png, image/jpeg"
+                    hidden
+                    onChange={addImage}
+                    ref={imagePickerRef}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col w-full">
+              <div className="flex w-full">
+                <FormInput
+                  label="Username"
+                  value={username}
+                  setValue={setUsername}
+                  error={usernameError}
+                  type="text"
                 />
               </div>
-            </div>
-            <div className="flex w-full">
-              <FormInput
-                label="Username"
-                value={username}
-                setValue={setUsername}
-                error={usernameError}
-                type="text"
-              />
-            </div>
-          </div>
-          <div>
-            <label className="block text-black dark:text-slate-200 font-medium mb-2">
-              Cover photo
-            </label>
-            <div className="relative mt-1 flex min-h-[150px] justify-center border-2 border-gray-300 border-dashed rounded-md">
-              {coverLoading ? (
-                <div className="center w-full h-[150px">
-                  <Loader size={30} />
-                </div>
-              ) : (
-                <Image src={cover} layout="fill" objectFit="cover" />
-              )}
-              <div
-                className="center absolute top-2 left-3  bg-white dark:bg-slate-200 hover:dark:bg-slate-700 text-black dark:text-slate-900 hover:dark:text-slate-200 w-10 h-10 rounded-full cursor-pointer transition-all"
-                onClick={() => coverPickerRef.current.click()}
-              >
-                <FiEdit />
+              <div className="flex w-1/2">
+                <FormInput
+                  label="Twitter Profile url"
+                  value={twitter}
+                  placeholder="https://twitter.com/VitalikButerin"
+                  setValue={setTwitter}
+                  error={twitterError}
+                  type="text"
+                />
               </div>
-
-              <input
-                type="file"
-                accept="image/png, image/jpeg"
-                hidden
-                onChange={addCover}
-                ref={coverPickerRef}
-              />
+              <div className="flex w-1/2">
+                <FormInput
+                  label="Opensea Profile url"
+                  value={opensea}
+                  placeholder="https://opensea.io/3LUE"
+                  setValue={setOpensea}
+                  error={openseaError}
+                  type="text"
+                />
+              </div>
             </div>
           </div>
         </div>
 
         <div className="mt-3">
           <Button
-            disabled={loading || coverLoading || pfpLoading}
-            label={loading || coverLoading || pfpLoading ? "Loading" : "Update"}
+            disabled={loading || imageLoading || pfpLoading}
+            label={loading || imageLoading || pfpLoading ? "Loading" : "Update"}
             onClick={handleFinish}
           />
         </div>

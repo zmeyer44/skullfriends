@@ -14,6 +14,7 @@ import {
   removeConnection,
 } from "../../config/firebase/functions";
 import { QrCodeModal } from "../../components/Modal";
+import { EditProfileModal } from "../../components/Modals";
 import { AiOutlineQrcode, AiOutlineLink } from "react-icons/ai";
 import { fetchAssets, fetchCollections, cleanUrl } from "../../utils";
 import icons from "../../assets/icons";
@@ -31,6 +32,7 @@ export default function ProfilePage() {
   const [tab, setTab] = useState("Collections");
   const [avatarSize, setAvatarSize] = useState(110);
   const [loading, setLoading] = useState(true);
+  const [editProfileModalOpen, setEditProfileModalOpen] = useState(true);
 
   const handleConnect = async () => {
     if (!user) {
@@ -60,7 +62,7 @@ export default function ProfilePage() {
     }
   };
   const editProfile = () => {
-    console.log("edit");
+    setEditProfileModalOpen(true);
   };
   const init = async () => {
     const res = await getUserInfoByUsername(username);
@@ -149,15 +151,20 @@ export default function ProfilePage() {
   }
 
   function renderSocial() {
-    if (!userData?.socials || userData?.socials?.length == 0) return;
+    if (!userData?.twitter && !userData?.opensea) return;
     return (
       <div className="flex flex-col justify-evenly py-3 w-full">
         <div className="flex justify-center text-[2.5em] space-x-4">
-          {userData.socials.map(({ slug, link }) => (
-            <a href={link} target="_blank" rel="noreferrer" key={slug}>
-              {icons[slug]}
+          {userData?.twitter && (
+            <a href={userData.twitter} target="_blank" rel="noreferrer">
+              {icons["twitter"]}
             </a>
-          ))}
+          )}
+          {userData?.opensea && (
+            <a href={userData.opensea} target="_blank" rel="noreferrer">
+              {icons["openSea"]}
+            </a>
+          )}
         </div>
       </div>
     );
@@ -250,76 +257,82 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="relative flex flex-col grow min-h-screen">
-      <div className="center w-full py-10 text-[1.25em] bg-black text-white">
-        <h3 className="font-player mb-[70px]">SKULL FRIENDS</h3>
-      </div>
+    <>
+      <div className="relative flex flex-col grow min-h-screen">
+        <div className="center w-full py-10 text-[1.25em] bg-black text-white">
+          <h3 className="font-player mb-[70px]">SKULL FRIENDS</h3>
+        </div>
 
-      <div className="flex justify-center relative grow mt-[-20px]">
-        <div className="absolute top-[-50px] lg:top-[-80px]">
-          <Avatar
-            src={userData?.pfp}
-            uid={userData?.uid}
-            size={avatarSize}
-            noRole
-            borderWidth={0}
-            styles="shadow-lg"
+        <div className="flex justify-center relative grow mt-[-20px]">
+          <div className="absolute top-[-50px] lg:top-[-80px]">
+            <Avatar
+              src={userData?.pfp}
+              uid={userData?.uid}
+              size={avatarSize}
+              noRole
+              borderWidth={0}
+              styles="shadow-lg"
+            />
+          </div>
+          <div
+            className="center rounded-full w-[40px] h-[40px] md:w-auto md:px-4  md:text-[1.6em] absolute top-3 right-3 bg-gradient-to-br from-pink-500 to-orange-300 text-black text-[1.4em] shadow-md cursor-pointer"
+            onClick={() => setQrModal(true)}
+          >
+            <span className="hidden md:inline mr-2 text-[.6em] ">Scan</span>{" "}
+            <AiOutlineQrcode />
+          </div>
+          <QrCodeModal
+            open={qrModal}
+            onClose={() => setQrModal(false)}
+            url={`https://skullfriends.vercel.app/u/${username}`}
           />
-        </div>
-        <div
-          className="center rounded-full w-[40px] h-[40px] md:w-auto md:px-4  md:text-[1.6em] absolute top-3 right-3 bg-gradient-to-br from-pink-500 to-orange-300 text-black text-[1.4em] shadow-md cursor-pointer"
-          onClick={() => setQrModal(true)}
-        >
-          <span className="hidden md:inline mr-2 text-[.6em] ">Scan</span>{" "}
-          <AiOutlineQrcode />
-        </div>
-        <QrCodeModal
-          open={qrModal}
-          onClose={() => setQrModal(false)}
-          url={`https://skullfriends.vercel.app/u/${username}`}
-        />
-        <div className="flex flex-col w-full pt-10 bg-gray-700 dark:bg-slate-800 rounded-t-[24px] grow">
-          <div className="flex flex-col items-center mt-8 ">
-            <h1 className="font-semibold text-slate-200 lg:text-[1.2em] font-player ">
-              {userData?.displayName}
-            </h1>
-            <span className=" text-sm text-slate-400">
-              {userData?.wallets?.length ? (
-                <a
-                  href={`https://etherscan.io/address/${userData.wallets[0]}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {userData?.wallets?.length
-                    ? `${userData.wallets[0]?.slice(
-                        0,
-                        5
-                      )}...${userData.wallets[0]?.slice(-4)}`
-                    : "Connect Wallet"}
-                </a>
-              ) : userData?.uid === user?.uid ? (
-                <span>Connect Wallet</span>
-              ) : (
-                <span></span>
-              )}
-            </span>
+          <div className="flex flex-col w-full pt-10 bg-gray-700 dark:bg-slate-800 rounded-t-[24px] grow">
+            <div className="flex flex-col items-center mt-8 pt-10">
+              <h1 className="font-semibold text-slate-200 lg:text-[1.2em] font-player ">
+                {userData?.displayName}
+              </h1>
+              <span className=" text-sm text-slate-400">
+                {userData?.wallets?.length ? (
+                  <a
+                    href={`https://etherscan.io/address/${userData.wallets[0]}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {userData?.wallets?.length
+                      ? `${userData.wallets[0]?.slice(
+                          0,
+                          5
+                        )}...${userData.wallets[0]?.slice(-4)}`
+                      : "Connect Wallet"}
+                  </a>
+                ) : userData?.uid === user?.uid ? (
+                  <span>Connect Wallet</span>
+                ) : (
+                  <span></span>
+                )}
+              </span>
 
-            {renderPillButton()}
+              {renderPillButton()}
 
-            {renderStats()}
-            {renderSocial()}
-            {renderWebsite()}
-            {renderTabs()}
-            {loading
-              ? renderLoading()
-              : tab == "Events"
-              ? renderEvents()
-              : tab == "Collections"
-              ? renderCollections()
-              : renderComingSoon()}
+              {renderStats()}
+              {renderSocial()}
+              {renderWebsite()}
+              {renderTabs()}
+              {loading
+                ? renderLoading()
+                : tab == "Events"
+                ? renderEvents()
+                : tab == "Collections"
+                ? renderCollections()
+                : renderComingSoon()}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      <EditProfileModal
+        open={editProfileModalOpen}
+        onClose={() => setEditProfileModalOpen(false)}
+      />
+    </>
   );
 }

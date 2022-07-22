@@ -57,7 +57,7 @@ export const icons = {
   alpha: <BsNewspaper />,
 
   twitter: (
-    <span className="text-[#1DA1F2]">
+    <span className="text-sky-400">
       <AiFillTwitterCircle />
     </span>
   ),
