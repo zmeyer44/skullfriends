@@ -61,7 +61,7 @@ const login = () => {
         title="Login"
         elements={formElements}
         options={[
-          { label: "Return Home", href: "/" },
+          { label: "Forgot Password", href: "/forgot-password" },
           { label: "Sign up", href: "/signup" },
         ]}
       >

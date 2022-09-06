@@ -4,6 +4,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { ErrorCode } from "../config/firebase/ErrorCode";
@@ -107,6 +108,15 @@ export const AuthContextProvider = ({ children }) => {
       return res;
     }
   };
+  const resetPassword = async (email) => {
+    const res = await sendPasswordResetEmail(auth, email);
+    console.log("RES", res);
+    if (!res?.error) {
+      return;
+    } else {
+      return res;
+    }
+  };
 
   const logout = async () => {
     setUser(null);
@@ -115,7 +125,7 @@ export const AuthContextProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, login, signup, logout, refreshUserInfo }}
+      value={{ user, login, signup, logout, refreshUserInfo, resetPassword }}
     >
       {loading ? null : children}
     </AuthContext.Provider>
