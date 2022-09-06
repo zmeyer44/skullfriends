@@ -14,7 +14,7 @@ const login = () => {
   const [passwordError, setPasswordError] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, refreshUserInfo } = useAuth();
   const router = useRouter();
 
   const handleLogin = async () => {
@@ -22,10 +22,16 @@ const login = () => {
     setLoading(true);
     try {
       const result = await login(email, password);
+      console.log("RES", result);
       if (result?.error) {
         setEmailError("Email or passowrd incorrect");
         setLoading(false);
       } else {
+        const newInfo = await refreshUserInfo();
+        // console.log("NEw", newInfo);
+        // console.log("User", user);
+        // setTimeout(() => console.log("user Wait", user), 100);
+        router.push(`/u/${newInfo.username}`);
         setLoading(false);
       }
     } catch (err) {
