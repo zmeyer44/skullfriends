@@ -124,7 +124,7 @@ const signup = () => {
             };
             await updateUser(user.uid, { ...newData });
             await refreshUserInfo();
-            setCurrentStep(currentStep + 1);
+            setCurrentStep(currentStep - 1);
             return;
           } else {
             alert("SIGNATURE does not match");
@@ -309,32 +309,7 @@ const signup = () => {
         onClick: handleUpdateUsername,
       },
     },
-    // {
-    //   title: "Connect Wallet",
-    //   content: (
-    //     <div
-    //       className="center self-center hover:bg-zinc-500 transition-colors text-zinc-600 border-2 border-zinc-600 w-1/2 rounded-lg px-8 py-4 my-4 cursor-pointer"
-    //       onClick={connectWallet}
-    //     >
-    //       <div className="center h-[40px] w-11/12">
-    //         <MetaMaskLogo />
-    //       </div>
-    //     </div>
-    //   ),
-    //   options: [
-    //     {
-    //       label: "Skip for now",
-    //       onClick: () => {
-    //         setCurrentStep(currentStep + 1);
-    //         setMaxStep(maxStep + 1);
-    //       },
-    //     },
-    //   ],
-    //   action: {
-    //     label: "Next",
-    //     onClick: () => console.log("here"),
-    //   },
-    // },
+
     {
       title: "Complete Profile",
       content: (
@@ -416,12 +391,47 @@ const signup = () => {
                 ref={imagePickerRef}
               />
             </div>
+            <button
+              onClick={() => {
+                setMaxStep(maxStep + 1);
+                setCurrentStep(currentStep + 1);
+              }}
+              className="mt-2 block text-gray-500 font-medium mb-2"
+            >
+              Connect Wallet
+            </button>
           </div>
         </div>
       ),
       action: {
         label: "Finish",
         onClick: handleFinish,
+      },
+    },
+    {
+      title: "Connect Wallet",
+      content: (
+        <div
+          className="center self-center hover:bg-zinc-500 transition-colors text-zinc-600 border-2 border-zinc-600 w-1/2 rounded-lg px-8 py-4 my-4 cursor-pointer"
+          onClick={connectWallet}
+        >
+          <div className="center h-[40px] w-11/12">
+            <MetaMaskLogo />
+          </div>
+        </div>
+      ),
+      options: [
+        {
+          label: "Skip for now",
+          onClick: () => {
+            setCurrentStep(currentStep - 1);
+            setMaxStep(maxStep - 1);
+          },
+        },
+      ],
+      action: {
+        label: "Next",
+        onClick: () => console.log("here"),
       },
     },
   ];
