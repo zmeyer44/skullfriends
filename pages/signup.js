@@ -309,32 +309,32 @@ const signup = () => {
         onClick: handleUpdateUsername,
       },
     },
-    {
-      title: "Connect Wallet",
-      content: (
-        <div
-          className="center self-center hover:bg-zinc-500 transition-colors text-zinc-600 border-2 border-zinc-600 w-1/2 rounded-lg px-8 py-4 my-4 cursor-pointer"
-          onClick={connectWallet}
-        >
-          <div className="center h-[40px] w-11/12">
-            <MetaMaskLogo />
-          </div>
-        </div>
-      ),
-      options: [
-        {
-          label: "Skip for now",
-          onClick: () => {
-            setCurrentStep(currentStep + 1);
-            setMaxStep(maxStep + 1);
-          },
-        },
-      ],
-      action: {
-        label: "Next",
-        onClick: () => console.log("here"),
-      },
-    },
+    // {
+    //   title: "Connect Wallet",
+    //   content: (
+    //     <div
+    //       className="center self-center hover:bg-zinc-500 transition-colors text-zinc-600 border-2 border-zinc-600 w-1/2 rounded-lg px-8 py-4 my-4 cursor-pointer"
+    //       onClick={connectWallet}
+    //     >
+    //       <div className="center h-[40px] w-11/12">
+    //         <MetaMaskLogo />
+    //       </div>
+    //     </div>
+    //   ),
+    //   options: [
+    //     {
+    //       label: "Skip for now",
+    //       onClick: () => {
+    //         setCurrentStep(currentStep + 1);
+    //         setMaxStep(maxStep + 1);
+    //       },
+    //     },
+    //   ],
+    //   action: {
+    //     label: "Next",
+    //     onClick: () => console.log("here"),
+    //   },
+    // },
     {
       title: "Complete Profile",
       content: (
