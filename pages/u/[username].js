@@ -233,6 +233,42 @@ export default function ProfilePage() {
       return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-3 gap-x-3 xl:gap-y-5 xl:gap-x-5 px-2 py-4 md:py-8 lg:py-10">
           <a
+            href={`https://www.nftparis.xyz/side-events-registration/skulls-meetup-for-a-brunch`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <div className="flex flex-col bg-slate-800 border border-slate-500 rounded-lg overflow-hidden relative w-full max-w-[375px]">
+              <div className="relative h-[80px]">
+                <Image
+                  src="https://substackcdn.com/image/fetch/w_600,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fpbs.substack.com%2Fmedia%2FFpbnKR8XEBofTJG.jpg"
+                  layout="fill"
+                  objectFit="cover"
+                />
+              </div>
+              <div className="flex justify-center relative h-[130px] px-4 py-3">
+                <div className="absolute top-[-40px] ">
+                  <Avatar
+                    src="https://substackcdn.com/image/fetch/w_600,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fpbs.substack.com%2Fmedia%2FFpbnKR8XEBofTJG.jpg"
+                    size={70}
+                  />
+                </div>
+                <div className="flex flex-col pt-[30px] text-center space-y-1">
+                  <div className="center">
+                    <h3 className="font-semibold text-slate-100 text-center mr-1">
+                      NFT Paris Skulls Brunch Meetup
+                    </h3>
+                    <Verified />
+                  </div>
+                  <h3 className="text-[.7em] leading-4 text-slate-300 max-h-[100px] max-w-[300px] line-clamp-3">
+                    CryptoSkulls holders are invited to join a private brunch
+                    meetup during NFT Paris! The event at 10AM Saturday 25th Feb
+                    2023.
+                  </h3>
+                </div>
+              </div>
+            </div>
+          </a>
+          <a
             href={`https://www.eventbrite.co.uk/e/nftuk-july-22-tickets-373549595897?keep_tld=1`}
             target="_blank"
             rel="noreferrer"
