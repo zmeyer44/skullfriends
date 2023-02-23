@@ -240,7 +240,7 @@ export default function ProfilePage() {
             <div className="flex flex-col bg-slate-800 border border-slate-500 rounded-lg overflow-hidden relative w-full max-w-[375px]">
               <div className="relative h-[80px]">
                 <Image
-                  src="https://substackcdn.com/image/fetch/w_600,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fpbs.substack.com%2Fmedia%2FFpbnKR8XEBofTJG.jpg"
+                  src="https://uploads-ssl.webflow.com/62e29661f8efaa50d68a5786/63edea9620b9c8f51a15f010_brunch-p-800.jpg"
                   layout="fill"
                   objectFit="cover"
                 />
